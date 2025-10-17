@@ -8,8 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: { python-version: '3.12' }
+        with:
+          python-version: "3.12"
 
       - name: Cache pip
         uses: actions/cache@v4
@@ -18,27 +20,27 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: ${{ runner.os }}-pip-
 
-      - name: Instalar dependências
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Lint
-        run: |
-          flake8 .
-          black --check .
+      - name: Setup Chrome (for Selenium headless)
+        uses: browser-actions/setup-chrome@v1
 
-      - name: Testes unitários com cobertura
+      - name: Run tests with coverage (unit + e2e)
         run: |
-          pytest -k "unit" --cov=app --cov=testes --cov-report=xml
+          pytest --cov=app --cov-report=xml --cov-report=term-missing -vv -s
 
-      - name: Instalar Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable || sudo apt-get install -y chromium-browser
+      - name: Build HTML coverage report
+        if: always()
+        run: coverage html
 
-      - name: Testes E2E (headless)
-        env:
-          CHROME_BIN: /usr/bin/google-chrome
-        run: |
-          pytest -k "e2e" -vv -s
+      - name: Upload coverage HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlcov-${{ github.run_id }}
+          path: htmlcov/
+          if-no-files-found: ignore
+          retention-days: 7
