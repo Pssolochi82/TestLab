@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = app
+
+[report]
+show_missing = True
+skip_covered = True
+omit =
+    */__init__.py
+    app/templates/*
+    testes/*
+    tests/*

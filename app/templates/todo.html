@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Lista de Tarefas</h2>
+<p>Olá, {{ user }}!</p>
+
+<form method="post">
+  <input name="item" placeholder="Nova tarefa" required />
+  <button type="submit">Adicionar</button>
+</form>
+
+<ul>
+  {% for t in todos %}<li>{{ t }}</li>{% endfor %}
+</ul>
+{% endblock %}
+

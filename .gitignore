@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[co]
+.env
+.venv/
+venv/
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Selenium downloads
+*.log
