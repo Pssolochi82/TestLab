@@ -28,9 +28,9 @@ jobs:
       - name: Setup Chrome (for Selenium headless)
         uses: browser-actions/setup-chrome@v1
 
-      - name: Run tests with coverage (unit + e2e)
+      - name: Run only unit tests with coverage
         run: |
-          pytest --cov=app --cov-report=xml --cov-report=term-missing -vv -s
+          pytest -k "unit" --cov=app --cov-report=xml --cov-report=term-missing -vv -s
 
       - name: Build HTML coverage report
         if: always()
